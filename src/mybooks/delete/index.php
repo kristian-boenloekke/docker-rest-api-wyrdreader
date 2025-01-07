@@ -7,19 +7,6 @@ allowedMethods(['DELETE', 'OPTIONS']);
 header('Content-Type: application/json');
 header('Authorization: Bearer <access-token>');
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    header('Allow: DELETE, OPTIONS'); 
-    http_response_code(200); 
-    exit;
-}
-
-if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
-    header('Allow: DELETE, OPTIONS');
-    http_response_code(405); 
-    echo json_encode(["error" => "Only DELETE method is allowed"]);
-    exit;
-}
-
 $userId = authenticateUser();  
 
 if ($userId === null) {
