@@ -1,0 +1,25 @@
+RewriteEngine On
+
+# Set base path to account for the folder structure inside the container
+RewriteBase /
+
+# Handle requests without trailing slash (redirect to the version with the trailing slash)
+RewriteCond %{REQUEST_URI} !/$
+RewriteRule ^(.*)$ /$1/ [L,R=301]
+
+# Route to book.php by matching numeric IDs
+RewriteRule ^books/([0-9]+)/*$ books/book.php?id=$1 [L,QSA]
+
+# Route to author.php by matching numeric IDs
+RewriteRule ^authors/([0-9]+)/*$ authors/author.php?id=$1 [L,QSA]
+
+# Route to genre.php by matching numeric IDs
+RewriteRule ^genres/([0-9]+)/*$ genres/genre.php?id=$1 [L,QSA]
+
+# Route to test.php
+RewriteRule ^test/*$ test.php [L]
+
+# Pass the Authorization header through (if present)
+RewriteCond %{HTTP:Authorization} .
+RewriteRule ^ - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+

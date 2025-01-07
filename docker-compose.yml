@@ -1,0 +1,44 @@
+services:
+  apache:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: apache_server
+    ports:
+      - "8080:80"  # Maps port 8080 on your host to port 80 in the container
+    volumes:
+      - ./src:/var/www/html  # Mount the project source code into the container
+    depends_on:
+      - mysql  # Ensure MySQL starts before Apache
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_server
+    restart: always  # This defines the restart policy
+    ports:
+      - "3306:3306"  # Maps port 3306 on your host to MySQL in the container
+    environment:
+      MYSQL_ROOT_PASSWORD: ""  # Root password is empty
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"  # Allows empty password for root
+      MYSQL_DATABASE: bookdb  # Default database to be created
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    ports:
+      - "8081:80"  # Access phpMyAdmin at http://localhost:8081
+    environment:
+      PMA_HOST: mysql  # The service name of the MySQL container
+      MYSQL_ROOT_PASSWORD: rootpassword
+    depends_on:
+      - mysql  # Ensure phpMyAdmin starts after MySQL
+
+  php-cli:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: php_cli
+    volumes:
+      - ./src:/app/src  # Mount the src folder inside the container
+    working_dir: /app/src  # Set the working directory inside the container to '/app/src' where the project files are mounted
