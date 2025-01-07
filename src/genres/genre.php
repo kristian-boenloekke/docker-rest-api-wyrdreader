@@ -1,4 +1,150 @@
 <?php
+/**
+ * @OA\Get(
+ *     path="/genres/{id}",
+ *     summary="Get details of a specific genre and its books",
+ *     description="This endpoint retrieves details of a specific genre along with its associated books, including book authors, images, and pagination for the books.",
+ *     tags={"Genres"},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="The unique ID of the genre to retrieve.",
+ *         @OA\Schema(
+ *             type="integer",
+ *             example=1
+ *         )
+ *     ),
+ *     @OA\Parameter(
+ *         name="offset",
+ *         in="query",
+ *         description="The offset for pagination.",
+ *         @OA\Schema(
+ *             type="integer",
+ *             default=0
+ *         )
+ *     ),
+ *     @OA\Parameter(
+ *         name="limit",
+ *         in="query",
+ *         description="The limit for the number of books to return.",
+ *         @OA\Schema(
+ *             type="integer",
+ *             default=20
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Details of the genre along with its associated books.",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(
+ *                 property="id",
+ *                 type="integer",
+ *                 description="The unique ID of the genre."
+ *             ),
+ *             @OA\Property(
+ *                 property="name",
+ *                 type="string",
+ *                 description="The name of the genre."
+ *             ),
+ *             @OA\Property(
+ *                 property="description",
+ *                 type="string",
+ *                 description="A description of the genre."
+ *             ),
+ *             @OA\Property(
+ *                 property="books",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(
+ *                         property="id",
+ *                         type="integer",
+ *                         description="The unique ID of the book."
+ *                     ),
+ *                     @OA\Property(
+ *                         property="title",
+ *                         type="string",
+ *                         description="The title of the book."
+ *                     ),
+ *                     @OA\Property(
+ *                         property="url",
+ *                         type="string",
+ *                         description="The URL of the book."
+ *                     ),
+ *                     @OA\Property(
+ *                         property="authors",
+ *                         type="array",
+ *                         @OA\Items(
+ *                             type="object",
+ *                             @OA\Property(
+ *                                 property="name",
+ *                                 type="string",
+ *                                 description="The name of the author."
+ *                             ),
+ *                             @OA\Property(
+ *                                 property="url",
+ *                                 type="string",
+ *                                 description="The URL to the author's details."
+ *                             )
+ *                         )
+ *                     ),
+ *                     @OA\Property(
+ *                         property="image",
+ *                         type="string",
+ *                         description="The image URL of the book."
+ *                     )
+ *                 ),
+ *                 description="A list of books belonging to this genre."
+ *             ),
+ *             @OA\Property(
+ *                 property="pagination",
+ *                 type="object",
+ *                 @OA\Property(
+ *                     property="next",
+ *                     type="string",
+ *                     description="URL to the next page of results, if available."
+ *                 ),
+ *                 @OA\Property(
+ *                     property="previous",
+ *                     type="string",
+ *                     description="URL to the previous page of results, if available."
+ *                 )
+ *             ),
+ *             @OA\Property(
+ *                 property="total_books",
+ *                 type="integer",
+ *                 description="The total number of books in this genre."
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Bad Request, missing or invalid genre ID.",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(
+ *                 property="error",
+ *                 type="string",
+ *                 description="Error message."
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Genre not found.",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(
+ *                 property="error",
+ *                 type="string",
+ *                 description="Error message."
+ *             )
+ *         )
+ *     )
+ * )
+ */
 require_once("../utils/db.php");
 require_once("../utils/cors.php");
 require_once("../vendor/autoload.php");
@@ -125,4 +271,4 @@ $result = [
     'total_books' => $totalBooks
 ];
 
-echo json_encode($result);
+echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);

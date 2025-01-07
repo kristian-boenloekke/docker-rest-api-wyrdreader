@@ -1,4 +1,63 @@
 <?php
+/**
+ * @OA\Tag(
+ *     name="Ratings",
+ *     description="Endpoints related to rating books by users."
+ * )
+ */
+
+/**
+ * @OA\Post(
+ *     path="/rate/",  
+ *     summary="Submit or update a rating for a book",
+ *     description="Submit a rating (1-5) for a specific book, or update an existing rating if the user has already rated the book.",
+ *     tags={"Ratings"},
+ *     security={
+ *         {"BearerAuth": {}}
+ *     },
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             type="object",
+ *             required={"bookId", "rating"},
+ *             @OA\Property(property="bookId", type="integer", description="ID of the book being rated"),
+ *             @OA\Property(property="rating", type="integer", description="Rating for the book (between 1 and 5)")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Rating updated successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="message", type="string", description="Success message")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=201,
+ *         description="Rating submitted successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="message", type="string", description="Success message")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Bad request, missing or invalid parameters",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="error", type="string", description="Error message")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=401,
+ *         description="Unauthorized access - Invalid or missing token"
+ *     ),
+ *     @OA\Response(
+ *         response=500,
+ *         description="Internal server error"
+ *     )
+ * )
+ */
 require_once("../utils/db.php"); 
 require_once("../utils/cors.php");
 require_once("../utils/authenticateUser.php");

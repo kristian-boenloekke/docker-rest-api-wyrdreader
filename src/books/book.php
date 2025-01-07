@@ -1,4 +1,174 @@
 <?php
+/**
+ * @OA\Get(
+ *     path="/books/{id}",
+ *     summary="Get details of a specific book by ID",
+ *     description="This endpoint retrieves detailed information about a specific book, including authors, genres, ratings, and reviews.",
+ *     tags={"Books"},
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         required=true,
+ *         description="The unique ID of the book to retrieve.",
+ *         @OA\Schema(
+ *             type="integer",
+ *             example=1
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Details of the book, including authors, ratings, genres, and reviews.",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(
+ *                 property="id",
+ *                 type="integer",
+ *                 description="The unique ID of the book."
+ *             ),
+ *             @OA\Property(
+ *                 property="title",
+ *                 type="string",
+ *                 description="The title of the book."
+ *             ),
+ *             @OA\Property(
+ *                 property="authors",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(
+ *                         property="name",
+ *                         type="string",
+ *                         description="Author's name."
+ *                     ),
+ *                     @OA\Property(
+ *                         property="url",
+ *                         type="string",
+ *                         description="Author's URL."
+ *                     )
+ *                 ),
+ *                 description="List of authors of the book."
+ *             ),
+ *             @OA\Property(
+ *                 property="first_published",
+ *                 type="string",
+ *                 description="The date the book was first published."
+ *             ),
+ *             @OA\Property(
+ *                 property="pages",
+ *                 type="integer",
+ *                 description="The total number of pages in the book."
+ *             ),
+ *             @OA\Property(
+ *                 property="image",
+ *                 type="string",
+ *                 description="The URL of the book's cover image."
+ *             ),
+ *             @OA\Property(
+ *                 property="average_rating",
+ *                 type="number",
+ *                 format="float",
+ *                 description="The average rating of the book."
+ *             ),
+ *             @OA\Property(
+ *                 property="rating_count",
+ *                 type="integer",
+ *                 description="The number of ratings the book has received."
+ *             ),
+ *             @OA\Property(
+ *                 property="genres",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(
+ *                         property="name",
+ *                         type="string",
+ *                         description="The genre of the book."
+ *                     ),
+ *                     @OA\Property(
+ *                         property="url",
+ *                         type="string",
+ *                         description="The URL of the genre."
+ *                     )
+ *                 ),
+ *                 description="List of genres associated with the book."
+ *             ),
+ *             @OA\Property(
+ *                 property="description",
+ *                 type="string",
+ *                 description="A description of the book."
+ *             ),
+ *             @OA\Property(
+ *                 property="reviews",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(
+ *                         property="id",
+ *                         type="integer",
+ *                         description="The unique ID of the review."
+ *                     ),
+ *                     @OA\Property(
+ *                         property="review",
+ *                         type="string",
+ *                         description="The review text."
+ *                     ),
+ *                     @OA\Property(
+ *                         property="submitted_by",
+ *                         type="object",
+ *                         @OA\Property(
+ *                             property="name",
+ *                             type="string",
+ *                             description="Name of the user who submitted the review."
+ *                         ),
+ *                         @OA\Property(
+ *                             property="url",
+ *                             type="string",
+ *                             description="URL to the user's profile."
+ *                         )
+ *                     ),
+ *                     @OA\Property(
+ *                         property="created_at",
+ *                         type="string",
+ *                         format="date-time",
+ *                         description="The timestamp when the review was created."
+ *                     ),
+ *                     @OA\Property(
+ *                         property="updated_at",
+ *                         type="string",
+ *                         format="date-time",
+ *                         description="The timestamp when the review was last updated."
+ *                     )
+ *                 ),
+ *                 description="List of reviews for the book."
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Bad request, missing book ID.",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(
+ *                 property="error",
+ *                 type="string",
+ *                 description="Error message explaining the invalid request."
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="Book not found.",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(
+ *                 property="error",
+ *                 type="string",
+ *                 description="Error message explaining that the book was not found."
+ *             )
+ *         )
+ *     )
+ * )
+ */
 require_once("../utils/db.php");
 require_once("../utils/cors.php");
 require_once("../vendor/autoload.php");
@@ -140,12 +310,14 @@ $book = [
     'first_published' => $bookData['first_published'],
     'pages' => $bookData['pages'],
     'image' => $bookData['image'],
-    'average_rating' => round($bookData['avg_rating'], 2),
+    'average_rating' => isset($bookData['avg_rating']) && is_numeric($bookData['avg_rating'])
+        ? round($bookData['avg_rating'], 2)
+        : null,
     'rating_count' => $bookData['rating_count'],
     'genres' => $genresLookup,
     'description' => $bookData['description'],
     'reviews' => $reviewsLookup
 ];
 
-echo json_encode($book);
-?>
+echo json_encode($book, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+

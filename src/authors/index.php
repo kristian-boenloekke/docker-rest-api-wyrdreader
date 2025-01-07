@@ -39,4 +39,4 @@ $result = [
     'authors' => $authors
 ];
 
-echo json_encode($result);
+echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);

@@ -1,4 +1,123 @@
 <?php
+/**
+ * @OA\Get(
+ *     path="/books",
+ *     summary="Get a paginated list of books",
+ *     description="This endpoint retrieves a paginated list of books along with their authors, ratings, and other relevant information.",
+ *     tags={"Books"},
+ *     @OA\Parameter(
+ *         name="offset",
+ *         in="query",
+ *         required=false,
+ *         description="The offset for pagination, specifying the starting point for the books list.",
+ *         @OA\Schema(
+ *             type="integer",
+ *             default=0
+ *         )
+ *     ),
+ *     @OA\Parameter(
+ *         name="limit",
+ *         in="query",
+ *         required=false,
+ *         description="The number of books to return per page.",
+ *         @OA\Schema(
+ *             type="integer",
+ *             default=10
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="A list of books with their authors, ratings, and pagination details.",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(
+ *                 property="count",
+ *                 type="integer",
+ *                 description="The total number of books."
+ *             ),
+ *             @OA\Property(
+ *                 property="next",
+ *                 type="string",
+ *                 nullable=true,
+ *                 description="URL for the next page of books."
+ *             ),
+ *             @OA\Property(
+ *                 property="previous",
+ *                 type="string",
+ *                 nullable=true,
+ *                 description="URL for the previous page of books."
+ *             ),
+ *             @OA\Property(
+ *                 property="books",
+ *                 type="array",
+ *                 @OA\Items(
+ *                     type="object",
+ *                     @OA\Property(
+ *                         property="id",
+ *                         type="integer",
+ *                         description="The book's unique ID."
+ *                     ),
+ *                     @OA\Property(
+ *                         property="title",
+ *                         type="string",
+ *                         description="The title of the book."
+ *                     ),
+ *                     @OA\Property(
+ *                         property="url",
+ *                         type="string",
+ *                         description="The URL of the book."
+ *                     ),
+ *                     @OA\Property(
+ *                         property="authors",
+ *                         type="array",
+ *                         @OA\Items(
+ *                             type="object",
+ *                             @OA\Property(
+ *                                 property="name",
+ *                                 type="string",
+ *                                 description="Author's name."
+ *                             ),
+ *                             @OA\Property(
+ *                                 property="url",
+ *                                 type="string",
+ *                                 description="Author's URL."
+ *                             )
+ *                         )
+ *                     ),
+ *                     @OA\Property(
+ *                         property="image",
+ *                         type="string",
+ *                         description="The URL of the book's image."
+ *                     ),
+ *                     @OA\Property(
+ *                         property="average_rating",
+ *                         type="number",
+ *                         format="float",
+ *                         description="The average rating of the book."
+ *                     ),
+ *                     @OA\Property(
+ *                         property="rating_count",
+ *                         type="integer",
+ *                         description="The number of ratings the book has received."
+ *                     )
+ *                 )
+ *             )
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=400,
+ *         description="Invalid request parameters",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(
+ *                 property="error",
+ *                 type="string",
+ *                 description="Error message describing the invalid request."
+ *             )
+ *         )
+ *     )
+ * )
+ */
 require_once("../utils/db.php");
 require_once("../utils/cors.php");
 require_once("../vendor/autoload.php");
@@ -113,4 +232,4 @@ $result = [
     'books' => $books
 ];
 
-echo json_encode($result);
+echo json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);

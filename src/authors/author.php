@@ -56,4 +56,4 @@ $author = [
     }, explode(',', $authorData['books'])) // Convert books string into an array and process each item
 ];
 
-echo json_encode($author);
+echo json_encode($author, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
