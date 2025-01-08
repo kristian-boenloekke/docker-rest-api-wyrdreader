@@ -1,7 +1,7 @@
 <?php
 /**
  * @OA\Get(
- *     path="/users/me/",  // Trailing slash included
+ *     path="/users/me/",  
  *     summary="Get current user details",
  *     description="Retrieve the details (email, username) of the authenticated user.",
  *     tags={"Users"},
@@ -47,7 +47,7 @@
  * )
  * 
  * @OA\Patch(
- *     path="/users/me/",  // Trailing slash included
+ *     path="/users/me/",  
  *     summary="Update current user details",
  *     description="Allows the authenticated user to update their email and/or username.",
  *     tags={"Users"},
@@ -89,7 +89,7 @@
  * )
  * 
  * @OA\Patch(
- *     path="/users/me/",  // Trailing slash included
+ *     path="/users/me/",  
  *     summary="Update current user password",
  *     description="Allows the authenticated user to update their password.",
  *     tags={"Users"},
@@ -324,6 +324,24 @@ function updatePassword($conn, $userId, $requestData) {
 
 
 function deleteUser($conn, $userId) {
+    if (!$userId) {
+        http_response_code(400);
+        echo json_encode(["error" => "'userId' is required"]);
+        return;
+    }
+
+    // Check if the user exists
+    $checkStmt = $conn->prepare("SELECT id FROM users WHERE id = :id");
+    $checkStmt->bindParam(":id", $userId, PDO::PARAM_INT);
+    $checkStmt->execute();
+
+    if ($checkStmt->rowCount() === 0) {
+        http_response_code(404);
+        echo json_encode(["error" => "User not found"]);
+        return;
+    }
+
+    // If user exists, proceed to delete
     $stmt = $conn->prepare("DELETE FROM users WHERE id = :id");
     $stmt->bindParam(":id", $userId, PDO::PARAM_INT);
 
@@ -335,4 +353,5 @@ function deleteUser($conn, $userId) {
         echo json_encode(["error" => "Failed to delete user"]);
     }
 }
+
 ?>

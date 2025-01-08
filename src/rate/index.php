@@ -103,18 +103,27 @@ $stmt->execute();
 
 // If a rating exists, update it
 if ($stmt->rowCount() > 0) {
-    // Update the rating
     $updateStmt = $conn->prepare("UPDATE book_ratings SET rating = :rating WHERE user_id = :userId AND book_id = :bookId");
     $updateStmt->bindParam(":rating", $rating);
     $updateStmt->bindParam(":userId", $userId);
     $updateStmt->bindParam(":bookId", $bookId);
 
+    $getStmt = $conn->prepare("SELECT rating FROM book_ratings WHERE user_id = :userId AND book_id = :bookId");
+    $getStmt->bindParam(":userId", $userId);
+    $getStmt->bindParam(":bookId", $bookId);
+    $getStmt->execute();
+    $existingRating = $getStmt->fetchColumn();
+
     try {
         $updateStmt->execute();
-        http_response_code(200);  // Success
-        echo json_encode(["message" => "Rating updated successfully"]);
+        http_response_code(200);
+        echo json_encode([
+            "message" => "Rating updated successfully",
+            "previous_rating" => $existingRating,
+            "new_rating" => $rating
+        ]);
     } catch (PDOException $e) {
-        http_response_code(500);  // Server error
+        http_response_code(500); 
         echo json_encode(["error" => "Failed to update rating: " . $e->getMessage()]);
     }
 } else {
