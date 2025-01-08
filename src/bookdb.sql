@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Jan 06, 2025 at 05:44 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: mysql
+-- Generation Time: Jan 06, 2025 at 11:54 PM
+-- Server version: 8.0.40
+-- PHP Version: 8.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,8 +28,8 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `authors` (
-  `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL
+  `id` int NOT NULL,
+  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -58,12 +58,12 @@ INSERT INTO `authors` (`id`, `name`) VALUES
 --
 
 CREATE TABLE `books` (
-  `id` int(11) NOT NULL,
-  `title` varchar(100) NOT NULL,
+  `id` int NOT NULL,
+  `title` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `first_published` date DEFAULT NULL,
-  `pages` int(11) NOT NULL,
-  `image` varchar(40) DEFAULT NULL,
-  `description` text NOT NULL
+  `pages` int NOT NULL,
+  `image` varchar(40) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `description` text COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -90,8 +90,8 @@ INSERT INTO `books` (`id`, `title`, `first_published`, `pages`, `image`, `descri
 --
 
 CREATE TABLE `book_authors` (
-  `book_id` int(11) NOT NULL,
-  `author_id` int(11) NOT NULL
+  `book_id` int NOT NULL,
+  `author_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -121,8 +121,8 @@ INSERT INTO `book_authors` (`book_id`, `author_id`) VALUES
 --
 
 CREATE TABLE `book_genres` (
-  `book_id` int(11) NOT NULL,
-  `genre_id` int(11) NOT NULL
+  `book_id` int NOT NULL,
+  `genre_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -171,11 +171,11 @@ INSERT INTO `book_genres` (`book_id`, `genre_id`) VALUES
 --
 
 CREATE TABLE `book_ratings` (
-  `id` int(11) NOT NULL,
-  `book_id` int(11) NOT NULL,
-  `rating` int(11) NOT NULL,
-  `created_at` date NOT NULL,
-  `user_id` int(11) NOT NULL
+  `id` int NOT NULL,
+  `book_id` int NOT NULL,
+  `rating` int NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `user_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -183,15 +183,16 @@ CREATE TABLE `book_ratings` (
 --
 
 INSERT INTO `book_ratings` (`id`, `book_id`, `rating`, `created_at`, `user_id`) VALUES
-(1, 1, 5, '2025-01-04', 3),
-(2, 2, 3, '2025-01-04', 3),
-(3, 3, 4, '2025-01-04', 3),
-(5, 1, 4, '2025-01-04', 4),
-(6, 2, 4, '2025-01-04', 4),
-(7, 3, 3, '2025-01-04', 4),
-(8, 4, 2, '2025-01-04', 4),
-(9, 5, 3, '2025-01-04', 5),
-(10, 4, 4, '2025-01-05', 5);
+(1, 1, 5, '2025-01-04 00:00:00', 3),
+(2, 2, 3, '2025-01-04 00:00:00', 3),
+(3, 3, 4, '2025-01-04 00:00:00', 3),
+(5, 1, 4, '2025-01-04 00:00:00', 4),
+(6, 2, 4, '2025-01-04 00:00:00', 4),
+(7, 3, 3, '2025-01-04 00:00:00', 4),
+(8, 4, 2, '2025-01-04 00:00:00', 4),
+(9, 5, 3, '2025-01-04 00:00:00', 5),
+(10, 4, 4, '2025-01-05 00:00:00', 5),
+(11, 7, 4, '2025-01-06 23:36:24', 5);
 
 -- --------------------------------------------------------
 
@@ -200,9 +201,9 @@ INSERT INTO `book_ratings` (`id`, `book_id`, `rating`, `created_at`, `user_id`) 
 --
 
 CREATE TABLE `genres` (
-  `id` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `description` text DEFAULT NULL
+  `id` int NOT NULL,
+  `name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -231,12 +232,12 @@ INSERT INTO `genres` (`id`, `name`, `description`) VALUES
 --
 
 CREATE TABLE `reviews` (
-  `id` int(11) NOT NULL,
-  `review` text NOT NULL,
-  `book_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `created_at` date NOT NULL,
-  `updated_at` date DEFAULT NULL
+  `id` int NOT NULL,
+  `review` text COLLATE utf8mb4_general_ci NOT NULL,
+  `book_id` int NOT NULL,
+  `user_id` int NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -244,11 +245,12 @@ CREATE TABLE `reviews` (
 --
 
 INSERT INTO `reviews` (`id`, `review`, `book_id`, `user_id`, `created_at`, `updated_at`) VALUES
-(1, 'Read it twice and still have no idea what this book is about. 5/5, brilliant', 1, 4, '2025-01-04', NULL),
-(3, 'A great mix of Harry Potter and Ghostbusters, if Harry was the teenage kingpin of a Hogwarts porn-ring, coming of age to the grim realization that his collection of creature-porn might actually not be the product of CGI', 2, 4, '2025-01-04', NULL),
-(5, 'My sense of self and the world got butchered open by this rare work of mindfuck. Never again will I be able to perceive the so-called \'natural\' phenomena of this planet as other than the evil avatars and eldritch weapons of the tellurian Insider', 1, 5, '2025-01-04', NULL),
-(6, 'Pretty good! Great take on the future AI assistent, but I had a hard time rallying up much sympathy for Jane Ward though', 3, 5, '2025-01-04', NULL),
-(7, 'An absolutely thrilling opening chapter of the book, scaringly seductive in its violent and lush gothic prose, this opening lingers like intoxicating perfume throughout, but a bit to my disappointment, I didn\'t feel like I really got that same scent  back in full in the rest of the book', 5, 5, '2025-01-04', '2025-01-04');
+(1, 'Read it twice and still have no idea what this book is about. 5/5, brilliant', 1, 4, '2025-01-04 00:00:00', NULL),
+(3, 'A great mix of Harry Potter and Ghostbusters, if Harry was the teenage kingpin of a Hogwarts porn-ring, coming of age to the grim realization that his collection of creature-porn might actually not be the product of CGI', 2, 4, '2025-01-04 00:00:00', NULL),
+(5, 'My sense of self and the world got butchered open by this rare work of mindfuck. Never again will I be able to perceive the so-called \'natural\' phenomena of this planet as other than the evil avatars and eldritch weapons of the tellurian Insider', 1, 5, '2025-01-04 00:00:00', NULL),
+(6, 'Pretty good! Great take on the future AI assistent, but I had a hard time rallying up much sympathy for Jane Ward though', 3, 5, '2025-01-04 00:00:00', NULL),
+(7, 'An absolutely thrilling opening chapter of the book, scaringly seductive in its violent and lush gothic prose, this opening lingers like intoxicating perfume throughout, but a bit to my disappointment, I didn\'t feel like I really got that same scent  back in full in the rest of the book', 5, 5, '2025-01-04 00:00:00', '2025-01-04 00:00:00'),
+(11, 'Really, really wyrd', 7, 4, '2025-01-06 23:47:50', '2025-01-06 23:53:15');
 
 -- --------------------------------------------------------
 
@@ -257,13 +259,13 @@ INSERT INTO `reviews` (`id`, `review`, `book_id`, `user_id`, `created_at`, `upda
 --
 
 CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
-  `username` varchar(20) NOT NULL,
-  `email` varchar(20) NOT NULL,
-  `password` varchar(100) NOT NULL,
-  `salt` varchar(50) NOT NULL,
-  `books` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  `reviews` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL
+  `id` int NOT NULL,
+  `username` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `password` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `salt` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `books` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin,
+  `reviews` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -284,8 +286,8 @@ INSERT INTO `users` (`id`, `username`, `email`, `password`, `salt`, `books`, `re
 --
 
 CREATE TABLE `user_books` (
-  `user_id` int(11) NOT NULL,
-  `book_id` int(11) NOT NULL
+  `user_id` int NOT NULL,
+  `book_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -351,37 +353,37 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `authors`
 --
 ALTER TABLE `authors`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `books`
 --
 ALTER TABLE `books`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `book_ratings`
 --
 ALTER TABLE `book_ratings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `genres`
 --
 ALTER TABLE `genres`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `reviews`
 --
 ALTER TABLE `reviews`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
