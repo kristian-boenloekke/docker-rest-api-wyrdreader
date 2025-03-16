@@ -16,18 +16,18 @@ Follow these steps to get the project up and running locally.
    ```bash
    docker-compose up --build
 
-2. **Install PHP dependencies:
+2. **Install PHP dependencies:**
 
    ```bash
    docker exec -it php_cli bash
    composer install
 
-3. **Import the database:
+3. **Import the database:**
 
 Import the bookdb.sql file located in the src folder to the bookdb database using phpMyAdmin at [http://localhost:8081](http://localhost:8081)
 
 
-4. **View the API documentation:
+4. **View the API documentation:**
 
    ```bash
    cd api-docs
