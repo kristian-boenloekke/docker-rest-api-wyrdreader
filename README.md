@@ -15,29 +15,22 @@ Follow these steps to get the project up and running locally.
 
    ```bash
    docker-compose up --build
-Install PHP dependencies:
 
-Once the containers are up, enter the PHP container and run Composer to install the dependencies:
+2. **Install PHP dependencies:
 
-bash
-Copy
-Edit
-docker exec -it php_cli bash
-composer install
-Import the database:
+   ```bash
+   docker exec -it php_cli bash
+   composer install
 
-Import the bookdb.sql file located in the src folder to the bookdb database using phpMyAdmin:
+3. **Import the database:
 
-Open phpMyAdmin in your browser.
-Create a new database named bookdb.
-Import the bookdb.sql file into the bookdb database.
-View the API documentation:
+Import the bookdb.sql file located in the src folder to the bookdb database using phpMyAdmin at [http://localhost:8081](http://localhost:8081)
 
-Navigate to the api-docs folder and start the documentation server using npx:
 
-bash
-Copy
-Edit
-cd api-docs
-npx serve
+4. **View the API documentation:
+
+   ```bash
+   cd api-docs
+   npx serve
+   
 This will start the server and you can view the API documentation at http://localhost:5000.
